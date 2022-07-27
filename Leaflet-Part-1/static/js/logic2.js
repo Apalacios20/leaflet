@@ -1,7 +1,3 @@
-// let myMap = L.map("map", {
-//     center: [41.515111142650824, -112.22313302713114],
-//     zoom: 4
-// });
 
 /* GeoJson URL */
 let geoData = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_week.geojson"
@@ -22,7 +18,7 @@ d3.json(geoData).then(function(data) {
     // Empty list to hold markers and circles
     let e_circles = [];
     let e_markers = [];
-
+    
     for (let i = 0; i < f_data.length; i++) {
         coordinates.push([f_data[i].geometry.coordinates[1],f_data[i].geometry.coordinates[0]]);
         depth.push(f_data[i].geometry.coordinates[2]);
@@ -68,9 +64,10 @@ d3.json(geoData).then(function(data) {
                     }).bindPopup(`<h1>${f_data[i].properties.place}</h1> <hr> <h3> Magnitude: ${f_data[i].properties.mag}</h3>`)
             )
         };
-    // Creation of map with base and layers
+
+    /* Map */
  
-    // Create the base layers.
+    // Base layers.
     let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         });
@@ -79,30 +76,30 @@ d3.json(geoData).then(function(data) {
         attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
         });
       
-    // Create a baseMaps object.
+    // baseMaps object.
     let baseMaps = {
         "Street Map": street,
         "Topographic Map": topo
     };
      
-    // Transforming lists into layer groups.
+    // Lists into layer groups
     let marker_layer = L.layerGroup(e_markers);
     let circle_layer = L.layerGroup(e_circles);
     
-    // Create an overlay object to hold our overlay.
+    // Overlay object to hold our overlay
     let overlayMaps = {
         "Markers": marker_layer,
         "Circles": circle_layer
     };
       
-    // Create our map, giving it the streetmap and earthquakes layers to display on load.
+    // Default map
     let myMap = L.map("map", {
         center: [41.515111142650824, -112.22313302713114],
         zoom: 4,
         layers: [street, circle_layer]
     });
       
-    // Create a layer control.
+    // Layer control
     L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
     }).addTo(myMap);    

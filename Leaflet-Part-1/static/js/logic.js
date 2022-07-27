@@ -23,7 +23,6 @@ d3.json(geoData).then(function(data) {
     let coordinates = [];
     let mag = [];
     let depth = [];
-    let e_circles = [];
 
     for (let i = 0; i < f_data.length; i++) {
         coordinates.push([f_data[i].geometry.coordinates[1],f_data[i].geometry.coordinates[0]]);
