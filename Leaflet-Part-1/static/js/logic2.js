@@ -18,7 +18,7 @@ d3.json(geoData).then(function(data) {
     // Empty list to hold markers and circles
     let e_circles = [];
     let e_markers = [];
-    
+
     for (let i = 0; i < f_data.length; i++) {
         coordinates.push([f_data[i].geometry.coordinates[1],f_data[i].geometry.coordinates[0]]);
         depth.push(f_data[i].geometry.coordinates[2]);
@@ -26,7 +26,7 @@ d3.json(geoData).then(function(data) {
         
         
         /* Conditionals for color depending on depth */
-        var color = "";
+        let color = "";
         if (depth[i] > 90) {
             color = "purple";
         }

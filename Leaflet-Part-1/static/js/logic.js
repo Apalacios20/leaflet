@@ -31,7 +31,7 @@ d3.json(geoData).then(function(data) {
         
         
         /* Conditionals for color depending on depth */
-        var color = "";
+        let color = "";
         if (depth[i] > 90) {
             color = "purple";
         }
