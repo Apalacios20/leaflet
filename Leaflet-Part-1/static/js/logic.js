@@ -1,24 +1,21 @@
-// Map default location
+/* Map default */
 let myMap = L.map("map", {
     center: [41.515111142650824, -112.22313302713114],
     zoom: 4
   });
 
-// Adding the tile layer
+/* Layer */
 L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
   }).addTo(myMap);
 
-// Load the GeoJSON data
+/* GeoJson URL */
 let geoData = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_week.geojson"
 
-
-
-// Get the data with d3.
+// Retrieve data in json through d3.
 d3.json(geoData).then(function(data) {
 
 //    L.geoJson(data).addTo(myMap);
-//    console.log(data);
 
     let f_data = data.features;
     console.log("Features:",f_data);
