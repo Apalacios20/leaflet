@@ -1,3 +1,7 @@
+// let myMap = L.map("map", {
+//     center: [41.515111142650824, -112.22313302713114],
+//     zoom: 4
+// });
 
 /* GeoJson URL */
 let geoData = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_week.geojson"
@@ -62,82 +66,76 @@ d3.json(geoData).then(function(data) {
                 /* Adjusting radius */
                 radius: mag[i] * 25000
                     }).bindPopup(`<h1>${f_data[i].properties.place}</h1> <hr> <h3> Magnitude: ${f_data[i].properties.mag}</h3>`)
-                );
-                
-        }
-    }
-);
-
-
-// Function to create map with layer control
-function createMap(earthquakes) {
-
+            )
+        };
+    // Creation of map with base and layers
+ 
     // Create the base layers.
     let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    })
-  
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+      
     let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-    });
-  
+        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        });
+      
     // Create a baseMaps object.
     let baseMaps = {
-      "Street Map": street,
-      "Topographic Map": topo
+        "Street Map": street,
+        "Topographic Map": topo
     };
-  
+     
+    // Transforming lists into layer groups.
+    let marker_layer = L.layerGroup(e_markers);
+    let circle_layer = L.layerGroup(e_circles);
+    
     // Create an overlay object to hold our overlay.
     let overlayMaps = {
-      "Markers": e_markers,
-      "Circles": e_circles
+        "Markers": marker_layer,
+        "Circles": circle_layer
     };
-  
+      
     // Create our map, giving it the streetmap and earthquakes layers to display on load.
     let myMap = L.map("map", {
         center: [41.515111142650824, -112.22313302713114],
         zoom: 4,
-      layers: [street, e_circles]
+        layers: [street, circle_layer]
     });
-  
+      
     // Create a layer control.
     L.control.layers(baseMaps, overlayMaps, {
-      collapsed: false
-    }).addTo(myMap);
-  
-  };
+        collapsed: false
+    }).addTo(myMap);    
+    
+    /*Legend*/
+    function getColor(d) {
+        return d > 90 ? "purple" :
+            d > 70  ? "red" :
+            d > 50  ? "orange" :
+            d > 30  ? "yellow" :
+            d > 10   ? "yellowgreen" :
+                    "green";
+    }
 
+    let legend = L.control({
+        position: "bottomleft"
+    });
 
+    legend.onAdd = function(myMap) {
+        let div = L.DomUtil.create("div", "info legend"),
+            grades = [0, 10, 30, 50, 70, 90],
+            labels = ["<strong> Magnitude </strong>"],
+            from, to;
+        for (let i = 0; i < grades.length; i++) {
+            from = grades[i];
+            to = grades[i + 1];
+            labels.push(
+                "<i style='background:" + getColor(from + 1) + "'></i>" + from + (to ? "&ndash;" + to: "+"));
+        }    
+        div.innerHTML = labels.join("<br>");
+        return div;
+        };
 
-/*Legend*/
-function getColor(d) {
-    return d > 90 ? "purple" :
-           d > 70  ? "red" :
-           d > 50  ? "orange" :
-           d > 30  ? "yellow" :
-           d > 10   ? "yellowgreen" :
-                "green";
-}
-
-let legend = L.control({
-    position: "bottomleft"
-  });
-
-legend.onAdd = function(myMap) {
-    let div = L.DomUtil.create("div", "info legend"),
-        grades = [0, 10, 30, 50, 70, 90],
-        labels = ["<strong> Magnitude </strong>"],
-        from, to;
-    for (let i = 0; i < grades.length; i++) {
-        from = grades[i];
-        to = grades[i + 1];
-        labels.push(
-            "<i style='background:" + getColor(from + 1) + "'></i>" + from + (to ? "&ndash;" + to: "+"));
-    }    
-    div.innerHTML = labels.join("<br>");
-    return div;
-    };
-legend.addTo(myMap);
-
-
-
+        legend.addTo(myMap);
+        }
+    );
