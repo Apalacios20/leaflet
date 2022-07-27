@@ -23,7 +23,7 @@ d3.json(geoData).then(function(data) {
     let coordinates = [];
     let mag = [];
     let depth = [];
-    
+    let e_circles = [];
 
     for (let i = 0; i < f_data.length; i++) {
         coordinates.push([f_data[i].geometry.coordinates[1],f_data[i].geometry.coordinates[0]]);
@@ -52,6 +52,7 @@ d3.json(geoData).then(function(data) {
             color = "green";
         }
 
+         
         L.circle(coordinates[i], {
                     
             fillOpacity: 0.65,
@@ -61,10 +62,7 @@ d3.json(geoData).then(function(data) {
             /* Adjust the radius */
             radius: mag[i] * 25000
           }).bindPopup(`<h1>${f_data[i].properties.place}</h1> <hr> <h3> Magnitude: ${f_data[i].properties.mag}</h3>`).addTo(myMap);
-    }
-    console.log("coordinates:",coordinates);
-    console.log("Mag:",mag);
-    console.log("Depth:",depth);
+        }
     }
     
 );
